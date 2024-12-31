@@ -61,8 +61,8 @@ def detect_and_estimate_pose(image_path, marker_length, scale_factor=1.0):
 
 if __name__ == "__main__":
     # Example usage
-    image_path = 'artest2_screenshot4.png'  # Update with your image
-    marker_length = 0.25  # Example: 25 cm
+    image_path = 'artest2_screenshot4.png'
+    marker_length = 0.25  # Used in cadaver study
     scale_factor = 0.01  # Adjust for Blender scaling
     poses = detect_and_estimate_pose(image_path, marker_length, scale_factor)
     print("Detected Poses:", poses)
