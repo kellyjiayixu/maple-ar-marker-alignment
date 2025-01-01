@@ -1,4 +1,4 @@
-# README: Setting the Center of an Object to an ArUco Marker's Center in Blender
+# Setting the Center of an Object to an ArUco Marker's Center in Blender
 
 This document describes the steps and procedure to use an ArUco marker's pose to align an object's origin to the center of the marker in Blender using Python scripts.
 
