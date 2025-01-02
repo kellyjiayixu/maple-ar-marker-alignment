@@ -433,7 +433,7 @@ MonoBehaviour:
   deviceType: 1
   sensorTypePv: 0
   arUcoDictionaryName: 8
-  markerSize: 0.01
+  markerSize: 0.025
   calibParams: {fileID: 805832266}
   markerGo: {fileID: 519181811}
   objectGo: {fileID: 1940231858}
@@ -614,17 +614,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0706564458db4a64185202020f602df9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.4
+      value: 6.92
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0706564458db4a64185202020f602df9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.6
+      value: -43.89
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0706564458db4a64185202020f602df9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.5
+      value: -17.06
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0706564458db4a64185202020f602df9,
         type: 3}
@@ -665,8 +665,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1454186557537732451, guid: e4a17730a37f2de458ec853195b5531b,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: e8b6e441a2dc6f742acebd65b1000b15, type: 2}
     - target: {fileID: -5754084199372789682, guid: 0706564458db4a64185202020f602df9,
         type: 3}
       propertyPath: m_Mesh
@@ -677,6 +676,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ObjectCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0706564458db4a64185202020f602df9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0706564458db4a64185202020f602df9, type: 3}

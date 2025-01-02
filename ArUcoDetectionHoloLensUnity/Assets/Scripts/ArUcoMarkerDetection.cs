@@ -89,7 +89,7 @@ namespace ArUcoDetectionHoloLensUnity
         // Relative Rotation between two markers
         public Quaternion relativeRotation;
 
-        private float scaling = 1000f;
+        private float scaling = 10f;
 
         
 
