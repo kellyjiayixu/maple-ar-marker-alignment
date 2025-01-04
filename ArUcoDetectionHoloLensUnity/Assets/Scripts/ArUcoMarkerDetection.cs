@@ -68,6 +68,7 @@ namespace ArUcoDetectionHoloLensUnity
         private Vector3 _lastPositionMarker2;
         private Quaternion _lastRotationMarker2;
 
+        private Dictionary<int, Dictionary<string, Vector3>> detectedPoses = new Dictionary<int, Dictionary<string, Vector3>>();
 
         // Add a field to keep track of whether the positions are valid (have been set at least once)
         private bool _positionMarker1Valid = false;
@@ -176,13 +177,66 @@ namespace ArUcoDetectionHoloLensUnity
 #endif
         }
 
-        public void PlaceBackObject()
+        public void CaptureRelativePose()
         {
             if (_positionMarker1Valid && _positionMarker2Valid)
             {
-                objectGo.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+                // Calculate relative position in the world coordinate system
+                relativePosition = _lastPositionMarker2 - _lastPositionMarker1;
+
+                // Calculate relative rotation
+                relativeRotation = Quaternion.Inverse(_lastRotationMarker1) * _lastRotationMarker2;
+
+                Debug.Log("Relative pose captured:");
+                Debug.Log("Relative Position: " + relativePosition);
+                Debug.Log("Relative Rotation: " + relativeRotation);
+            }
+            else
+            {
+                Debug.LogError("Both markers must be visible to capture relative pose.");
             }
         }
+
+
+        public void PlaceBackObject()
+        {
+            if (_positionMarker1Valid || _positionMarker2Valid)
+            {
+                Vector3 basePosition;
+                Quaternion baseRotation;
+
+                if (_positionMarker1Valid)
+                {
+                    basePosition = _lastPositionMarker1;
+                    baseRotation = _lastRotationMarker1;
+                }
+                else
+                {
+                    basePosition = _lastPositionMarker2;
+                    baseRotation = _lastRotationMarker2;
+                }
+
+                // Calculate the new position using the captured relative pose
+                Vector3 newPosition = basePosition + baseRotation * relativePosition;
+
+                // Calculate the new rotation
+                Quaternion newRotation = baseRotation * relativeRotation;
+
+                // Apply the corrective rotation for orientation if needed
+                Quaternion correctiveRotation = Quaternion.Euler(0, 180, 180);
+                newRotation = newRotation * correctiveRotation;
+
+                // Set the object's position and rotation
+                objectGo.transform.SetPositionAndRotation(newPosition, newRotation);
+
+                Debug.Log("Object placed back at the marker's position with correct alignment.");
+            }
+            else
+            {
+                Debug.LogError("No valid marker position available to place the object.");
+            }
+        }
+
 
         async void OnApplicationQuit()
         {
@@ -325,9 +379,26 @@ namespace ArUcoDetectionHoloLensUnity
             myText.text = "Detected markers: " + detections.Count + ". Began streaming sensor frames. Double tap to end streaming.";
         }
 
+        // void HandleTwoMarkers(IList<DetectedArUcoMarker> detections)
+        // {
+        //     // Assuming marker IDs are 1 and 2, update positions and rotations for both
+        //     foreach (var marker in detections)
+        //     {
+        //         if (marker.Id == 1)
+        //         {
+        //             UpdateMarkerData(marker, out _lastPositionMarker1, out _lastRotationMarker1);
+        //             _positionMarker1Valid = true;
+        //         }
+        //         else if (marker.Id == 2)
+        //         {
+        //             UpdateMarkerData(marker, out _lastPositionMarker2, out _lastRotationMarker2);
+        //             _positionMarker2Valid = true;
+        //         }
+        //     }
+        // }
+
         void HandleTwoMarkers(IList<DetectedArUcoMarker> detections)
         {
-            // Assuming marker IDs are 1 and 2, update positions and rotations for both
             foreach (var marker in detections)
             {
                 if (marker.Id == 1)
@@ -341,29 +412,65 @@ namespace ArUcoDetectionHoloLensUnity
                     _positionMarker2Valid = true;
                 }
             }
+
+            Debug.Log("Two markers detected and updated.");
         }
+
+
+        // void HandleOneMarker(IList<DetectedArUcoMarker> detections)
+        // {
+        //     // Check which marker is detected and update the object's position to the last known position of the other
+        //     var detectedMarker = detections[0];
+        //     if (detectedMarker.Id == 1 && _positionMarker2Valid)
+        //     {
+        //         // objectGo.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+        //         UpdateMarkerData(detectedMarker, out _lastPositionMarker1, out _lastRotationMarker1);
+        //     }
+        //     else if (detectedMarker.Id == 2 && _positionMarker1Valid)
+        //     {
+        //         // objectGo.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
+        //         UpdateMarkerData(detectedMarker, out _lastPositionMarker2, out _lastRotationMarker2);
+        //     }
+        // }
 
         void HandleOneMarker(IList<DetectedArUcoMarker> detections)
         {
-            // Check which marker is detected and update the object's position to the last known position of the other
             var detectedMarker = detections[0];
-            if (detectedMarker.Id == 1 && _positionMarker2Valid)
+
+            if (detectedMarker.Id == 1)
             {
-                // objectGo.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
                 UpdateMarkerData(detectedMarker, out _lastPositionMarker1, out _lastRotationMarker1);
+                _positionMarker1Valid = true;
             }
-            else if (detectedMarker.Id == 2 && _positionMarker1Valid)
+            else if (detectedMarker.Id == 2)
             {
-                // objectGo.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
                 UpdateMarkerData(detectedMarker, out _lastPositionMarker2, out _lastRotationMarker2);
+                _positionMarker2Valid = true;
             }
+
+            Debug.Log($"One marker detected: ID = {detectedMarker.Id}");
         }
+
+        // void UpdateMarkerData(DetectedArUcoMarker marker, out Vector3 lastPosition, out Quaternion lastRotation)
+        // {
+        //     Vector3 position = CvUtils.Vec3FromFloat3(marker.Position);
+        //     position.y *= -1f;
+        //     Quaternion rotation = CvUtils.RotationQuatFromRodrigues(CvUtils.Vec3FromFloat3(marker.Rotation));
+        //     Matrix4x4 cameraToWorldUnity = CvUtils.Mat4x4FromFloat4x4(marker.CameraToWorldUnity);
+        //     Matrix4x4 transformUnityCamera = CvUtils.TransformInUnitySpace(position, rotation);
+
+        //     Matrix4x4 transformUnityWorld = cameraToWorldUnity * transformUnityCamera;
+        //     lastPosition = CvUtils.GetVectorFromMatrix(transformUnityWorld);
+        //     lastRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
+        // }
 
         void UpdateMarkerData(DetectedArUcoMarker marker, out Vector3 lastPosition, out Quaternion lastRotation)
         {
+            // Extract position and rotation in camera space
             Vector3 position = CvUtils.Vec3FromFloat3(marker.Position);
-            position.y *= -1f;
             Quaternion rotation = CvUtils.RotationQuatFromRodrigues(CvUtils.Vec3FromFloat3(marker.Rotation));
+
+            // Transform to Unity's world space
             Matrix4x4 cameraToWorldUnity = CvUtils.Mat4x4FromFloat4x4(marker.CameraToWorldUnity);
             Matrix4x4 transformUnityCamera = CvUtils.TransformInUnitySpace(position, rotation);
 
@@ -371,16 +478,9 @@ namespace ArUcoDetectionHoloLensUnity
             lastPosition = CvUtils.GetVectorFromMatrix(transformUnityWorld);
             lastRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
 
-            // // Assuming the marker's up vector aligns with the surface normal
-            // Vector3 surfaceNormal = rotation * Vector3.up; // Original normal calculation
-
-            // // Flip the normal
-            // surfaceNormal = -surfaceNormal; // Negating the normal to flip it
-
-            // // Adjust rotation based on the flipped normal
-            // Quaternion surfaceAlignmentRotation = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
-            // lastRotation *= surfaceAlignmentRotation;
+            Debug.Log($"Marker {marker.Id} updated: Position = {lastPosition}, Rotation = {lastRotation}");
         }
+
 #endif
 
         /// <summary>

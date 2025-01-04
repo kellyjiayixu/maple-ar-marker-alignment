@@ -4,6 +4,27 @@ This document describes the steps and procedure to use an ArUco marker's pose to
 
 ---
 
+## New Pipeline (Clean Up Needed)
+## Blender Workflow:
+1. In an empty blender scene, position the camera to have identity pose (Location and Rotation are 0, and Scale is 1)
+	1. Set camera parameters that are physically reasonable. E.g.: Set Focal Length to 50 mm, Clip Start to 0.01 m (something small). Other parameters should be fine as is.
+2. Import the specimen into the blender scene.
+	1. In the import dialog, set the scale to 0.001 for unit conversion if needed. All other parameters should be set to default.
+	2. If needed, add the texture manually.
+3. Move the model such that the aruco marker is clearly in the camera view, ideally occupying > 50% of the camera view port.
+4. Apply all transforms done to the model. (`ctrl + A`) (You can duplicate the original model for storing the prior transforms, for reference)
+5. render an image and save it. 
+    1. You may need to change the light intensity so the marker is more visible.
+6. Obtain camera calibration matrix with `blenderCamToOpenCVParams(camName)` from `blender_scripts.py`.
+	1. Copy the function into blender python terminal, press enter.
+	2. On a new line, call the function `blenderCamToOpenCVParams(camName)` with the camera name string as input. (e.g. "Camera" for the default blender camera) 
+7. run `estimate_pose.py` with the rendered image, camera matrix, scale factor and aruco marker size eneterd.
+8. Set the location of the specimen to be `inv_tvec` and the rotation of the specimen model to be `invert_euler`, and **apply all transforms** (`ctrl + A`)
+9. Select the specimen model and export it with the desired format in `File`  -> `Export`.
+	1. Note: **Forward Axis needs to be Y**, **Up Axis needs to be Z**. This is needed for the current setup to appear as desired in Unity.
+		1. This equates to saying: "The forward axis (Y) in Blender is stored as Y axis in the model file, and the up axis (Z) in Blender is stored as Z axis in the model file."
+
+
 ## **Overview**
 This guide explains how to:
 
@@ -182,23 +203,19 @@ def set_empty_as_object_origin(object_name, empty_name):
     # Get the objects
     obj = bpy.data.objects.get(object_name)
     empty = bpy.data.objects.get(empty_name)
-    
     if not obj:
         raise ValueError(f"Object '{object_name}' not found in the scene.")
     if not empty:
         raise ValueError(f"Empty object '{empty_name}' not found in the scene.")
-
     # Save the current selection
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
-
     # Set the object's origin to the location of the empty
     obj_origin = empty.location.copy()
     obj.location = obj.location - obj_origin  # Adjust the object's location
     bpy.context.scene.cursor.location = obj_origin  # Move 3D cursor to the empty's location
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR')  # Set the origin to the 3D cursor
-
     print(f"Origin of '{object_name}' set to the location of '{empty_name}' at {obj_origin}.")
 
 # Example usage
