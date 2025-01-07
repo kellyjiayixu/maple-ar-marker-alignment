@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ArUcoDetection.unity
     guid: 6e511bc868e671f4391dbe6b9adeed25
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b0a1033b8e64705419c47bf3d0fcbf99,
+      type: 2}
