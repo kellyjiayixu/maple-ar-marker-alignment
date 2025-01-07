@@ -30,3 +30,10 @@ MonoBehaviour:
       id: 0
       description: None
       axisConstraint: 0
+  - localizationKey: 
+    keyword: Toggle Profiler
+    keyCode: 0
+    action:
+      id: 15
+      description: Toggle Profiler
+      axisConstraint: 0

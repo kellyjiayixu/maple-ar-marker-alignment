@@ -88,7 +88,7 @@ namespace ArUcoDetectionHoloLensUnity
 
         private bool _mediaFrameSourceGroupsStarted = false;
         private int _frameCount = 0;
-        public int skipFrames = 1;
+        public int skipFrames = 3;
 
         // Relative Position between two markers
         public Vector3 relativePosition;
@@ -149,18 +149,18 @@ namespace ArUcoDetectionHoloLensUnity
 
 
             // DEBUG PURPOSES
-            _positionMarker1Valid = 0;
-            _positionMarker2Valid = 0;
+            //_positionMarker1Valid = 0;
+            //_positionMarker2Valid = 0;
 
-            _lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
-            _lastRotationMarker1 = Quaternion.Euler(new Vector3(0, 0, 0));
+            //_lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
+            //_lastRotationMarker1 = Quaternion.Euler(new Vector3(0, 0, 0));
 
-            markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
+            //markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
 
-            _lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
-            _lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
+            //_lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
+            //_lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
 
-            markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+            //markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
 
             //CaptureRelativePose();
 
@@ -194,7 +194,7 @@ namespace ArUcoDetectionHoloLensUnity
             if (_frameCount == skipFrames)
             {
                 var detections = await Task.Run(() => _pvMediaFrameSourceGroup.DetectArUcoMarkers(_sensorType));
-
+                myText.text = "tracking... " + detections.Count;
                 // Update the game object pose with current detections
                 UpdateArUcoDetections(detections);
 
@@ -219,7 +219,7 @@ namespace ArUcoDetectionHoloLensUnity
             }
             else
             {
-                Debug.LogError("Both markers must be visible to capture relative pose.");
+                Debug.Log("Both markers must be visible to capture relative pose.");
             }
         }
 
@@ -235,7 +235,7 @@ namespace ArUcoDetectionHoloLensUnity
             }
             else
             {
-                Debug.LogError("No valid marker position available to place the object.");
+                Debug.Log("No valid marker position available to place the object.");
             }
         }
 
@@ -502,7 +502,7 @@ namespace ArUcoDetectionHoloLensUnity
             lastPosition = CvUtils.GetVectorFromMatrix(transformUnityWorld);
             lastRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
 
-            markerObj.transform.SetPositionAndRotation(lastPosition, lastRotation)
+            markerObj.transform.SetPositionAndRotation(lastPosition, lastRotation);
             Debug.Log($"Marker {marker.Id} updated: Position = {lastPosition}, Rotation = {lastRotation}");
         }
 #endif
