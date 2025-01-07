@@ -499,8 +499,8 @@ GameObject:
   - component: {fileID: 805832264}
   - component: {fileID: 805832265}
   - component: {fileID: 805832266}
-  - component: {fileID: 805832267}
   - component: {fileID: 805832268}
+  - component: {fileID: 805832267}
   m_Layer: 0
   m_Name: Script Holder
   m_TagString: Untagged
@@ -626,8 +626,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   persistentKeywords: 0
-  speechConfirmationTooltipPrefab: {fileID: 8046114618238072051, guid: 271778f6c957b524981067a81d238394,
-    type: 3}
+  speechConfirmationTooltipPrefab: {fileID: 0}
 --- !u!114 &805832268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,6 +997,7 @@ GameObject:
   - component: {fileID: 1415885591}
   - component: {fileID: 1415885596}
   - component: {fileID: 1415885597}
+  - component: {fileID: 1415885595}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1079,6 +1079,29 @@ Transform:
   m_Father: {fileID: 1941422609}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1415885595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415885590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf98dd1206224111a38765365e98e207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockCursorWhenFocusLocked: 1
+  setCursorInvisibleWhenFocusLocked: 0
+  maxGazeCollisionDistance: 10
+  raycastLayerMasks:
+  - serializedVersion: 2
+    m_Bits: 4294967291
+  stabilizer:
+    storedStabilitySamples: 60
+  gazeTransform: {fileID: 0}
+  minHeadVelocityThreshold: 0.5
+  maxHeadVelocityThreshold: 2
 --- !u!114 &1415885596
 MonoBehaviour:
   m_ObjectHideFlags: 0
