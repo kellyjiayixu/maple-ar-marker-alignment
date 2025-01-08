@@ -18,8 +18,22 @@ MonoBehaviour:
   speechCommands:
   - localizationKey: 
     keyword: Replace
-    keyCode: 0
+    keyCode: 13
     action:
       id: 0
       description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Toggle Profiler
+    keyCode: 0
+    action:
+      id: 15
+      description: Toggle Profiler
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Capture
+    keyCode: 32
+    action:
+      id: 0
+      description: Toggle Profiler
       axisConstraint: 0
