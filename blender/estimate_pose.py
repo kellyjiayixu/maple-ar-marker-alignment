@@ -48,7 +48,7 @@ def detect_and_estimate_pose(image_path, marker_length, camera_matrix, scale_fac
 
     # Detect ArUco markers
     corners, ids, _ = cv.aruco.detectMarkers(image, aruco_dict, parameters=parameters)
-    print(ids)
+    print(corners)
     if ids is not None and len(corners) > 0:
         dist_coeffs = np.zeros((5,), dtype=np.float32)  # Assuming no lens distortion
 
@@ -68,15 +68,20 @@ def detect_and_estimate_pose(image_path, marker_length, camera_matrix, scale_fac
             rvec_Blender, scaled_tvec_Blender = mat_to_rvec_tvec(blender_cam_T_obj)
 
 
-            scaled_tvec_Blender_inv_world = - scaled_tvec_Blender
-            invTMat_t = np.eye(4)
-            invTMat_t[:3, 3] = scaled_tvec_Blender_inv_world
+            # Manually Inverting by [R^T, -R^T @ p]
+            # scaled_tvec_Blender_inv_world = - scaled_tvec_Blender
+            # invTMat_t = np.eye(4)
+            # invTMat_t[:3, 3] = scaled_tvec_Blender_inv_world
 
-            invTMat_R = np.linalg.inv(blender_cam_T_obj)
-            invTMat_R[:3, 3] = 0
-            # rvec_Blender_inv, _ = mat_to_rvec_tvec(invTMat_R)
+            # invTMat_R = np.linalg.inv(blender_cam_T_obj)
+            # print(invTMat_R)
+            # invTMat_R[:3, 3] = 0
+            # # rvec_Blender_inv, _ = mat_to_rvec_tvec(invTMat_R)
 
-            invTMat = invTMat_R @ invTMat_t
+            # invTMat = invTMat_R @ invTMat_t
+
+            invTMat = np.linalg.inv(blender_cam_T_obj)
+
             rvec_Blender_inv, scaled_tvec_Blender_inv = mat_to_rvec_tvec(invTMat)
             poses[ids[i][0]] = {"rvec": rvec_Blender, "tvec": scaled_tvec_Blender, "quat": R.from_rotvec(rvec_Blender).as_quat(canonical=True),  
                                 "inv_tvec": scaled_tvec_Blender_inv, "inv_euler": R.from_rotvec(rvec_Blender_inv).as_euler("xyz", degrees=True)}  # Store scaled translation

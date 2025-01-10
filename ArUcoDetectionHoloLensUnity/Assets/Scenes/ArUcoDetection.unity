@@ -363,7 +363,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 4
+    m_FontSize: 3
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -463,6 +463,8 @@ MonoBehaviour:
   markerGo1: {fileID: 1388421543}
   markerGo2: {fileID: 873700582}
   objectGo: {fileID: 778513722}
+  VSmoothFactor: 0.08
+  RSmoothFactor: 0.08
   skipFrames: 2
   relativePosition: {x: 0, y: 0, z: 0}
   relativeRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -534,6 +536,36 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 805832264}
           m_MethodName: CaptureRelativePose
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - keyword: Hide Text
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 805832264}
+          m_MethodName: hideMyText
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - keyword: Show Text
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 805832264}
+          m_MethodName: showMyText
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

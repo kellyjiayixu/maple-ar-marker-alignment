@@ -27,11 +27,11 @@ public class ModelFileLoader : MonoBehaviour
         if (!isFileLoaded)
         {
             CheckAndLoadFile();
-            myText.text += "\n Finding File from " + modelFileFolderPath;
+            //myText.text += "\n Finding File from " + modelFileFolderPath;
         }
         else
         {
-            myText.text += "\n File Loaded! from " + modelFileFolderPath;
+            //myText.text += "\n File Loaded! from " + modelFileFolderPath;
         }
     }
     private void CheckAndLoadFile()

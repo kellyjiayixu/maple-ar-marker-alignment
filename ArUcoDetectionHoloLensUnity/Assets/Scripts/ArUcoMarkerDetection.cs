@@ -68,6 +68,8 @@ namespace ArUcoDetectionHoloLensUnity
         private Quaternion _lastRotationMarker1;
         private Vector3 _lastPositionMarker2;
         private Quaternion _lastRotationMarker2;
+        public float VSmoothFactor = 0.2f; // a * (1-F) + b * F
+        public float RSmoothFactor = 0.2f;
 
         private Dictionary<int, Dictionary<string, Vector3>> detectedPoses = new Dictionary<int, Dictionary<string, Vector3>>();
 
@@ -146,15 +148,52 @@ namespace ArUcoDetectionHoloLensUnity
             //_positionMarker1Valid = true;
             //_positionMarker2Valid = true;
 
-            //_lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
-            //_lastRotationMarker1 = Quaternion.Euler(new Vector3(0, 0, 0));
+            _lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
+            _lastRotationMarker1 = Quaternion.Euler(new Vector3(1, 0, 0));
 
-            //markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
+            markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
 
-            //_lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
-            //_lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
+            _lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
+            _lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
 
-            //markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+            markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+
+            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
+
+            Debug.Log(_lastPositionMarker1);
+            Debug.Log(_lastRotationMarker1);
+
+            Debug.Log(_lastPositionMarker2);
+            Debug.Log(_lastRotationMarker2);
+
+            _lastPositionMarker1 = Vector3.zero;
+            _lastRotationMarker1 = Quaternion.identity;
+
+            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
+
+            Debug.Log(_lastPositionMarker1);
+            Debug.Log(_lastRotationMarker1);
+
+            Debug.Log(_lastPositionMarker2);
+            Debug.Log(_lastRotationMarker2);
+
+
+            _lastPositionMarker2 = new Vector3(1f, 0, 1f);
+            _lastRotationMarker2 = Quaternion.Euler(new Vector3(10, 10, 10));
+
+            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
+
+            Debug.Log(_lastPositionMarker1);
+            Debug.Log(_lastRotationMarker1);
+
+            Debug.Log(_lastPositionMarker2);
+            Debug.Log(_lastRotationMarker2);
+
+
+            _lastPositionMarker1 = Vector3.zero;
+            _lastRotationMarker1 = Quaternion.identity;
+            _lastPositionMarker2 = Vector3.zero;
+            _lastRotationMarker2 = Quaternion.identity;
 
         }
 
@@ -374,7 +413,7 @@ namespace ArUcoDetectionHoloLensUnity
 
         // Get the latest frame from hololens media
         // frame source group -- not needed
-#if ENABLE_WINMD_SUPPORT           
+#if ENABLE_WINMD_SUPPORT
         void UpdateArUcoDetections(IList<DetectedArUcoMarker> detections)
         {
             if (!_mediaFrameSourceGroupsStarted ||
@@ -430,7 +469,9 @@ namespace ArUcoDetectionHoloLensUnity
                 _isWorldAnchored = true;
             }
 
-            myText.text = "Detected markers: " + detections.Count + ". Began streaming sensor frames. Double tap to end streaming.";
+            string posString = $"({relativePosition.x:F4}, {relativePosition.y:F4}, {relativePosition.z:F4})";
+            string rotString = $"({relativeRotation.x:F3}, {relativeRotation.y:F3}, {relativeRotation.z:F3}, {relativeRotation.w:F3})";
+            myText.text = "Detected markers: " + detections.Count + "\nPosition" + posString + "\nRotation" + rotString;
         }
 
         // void HandleTwoMarkers(IList<DetectedArUcoMarker> detections)
@@ -440,12 +481,12 @@ namespace ArUcoDetectionHoloLensUnity
         //     {
         //         if (marker.Id == 1)
         //         {
-        //             UpdateMarkerData(marker, out _lastPositionMarker1, out _lastRotationMarker1);
+        //             UpdateMarkerData(marker, ref _lastPositionMarker1, ref _lastRotationMarker1);
         //             _positionMarker1Valid = true;
         //         }
         //         else if (marker.Id == 2)
         //         {
-        //             UpdateMarkerData(marker, out _lastPositionMarker2, out _lastRotationMarker2);
+        //             UpdateMarkerData(marker, ref _lastPositionMarker2, ref _lastRotationMarker2);
         //             _positionMarker2Valid = true;
         //         }
         //     }
@@ -457,14 +498,14 @@ namespace ArUcoDetectionHoloLensUnity
             {
                 if (marker.Id == 1)
                 {
-                    UpdateMarkerData(marker, markerGo1, out _lastPositionMarker1, out _lastRotationMarker1);
-                    //UpdateMarkerData(marker, out _lastPositionMarker1, out _lastRotationMarker1);
+                    UpdateMarkerData(marker, markerGo1, ref _lastPositionMarker1, ref _lastRotationMarker1);
+                    //UpdateMarkerData(marker, ref _lastPositionMarker1, ref _lastRotationMarker1);
                     _positionMarker1Valid = true;
                 }
                 else if (marker.Id == 2)
                 {
-                    UpdateMarkerData(marker, markerGo2, out _lastPositionMarker2, out _lastRotationMarker2);
-                    //UpdateMarkerData(marker, out _lastPositionMarker2, out _lastRotationMarker2);
+                    UpdateMarkerData(marker, markerGo2, ref _lastPositionMarker2, ref _lastRotationMarker2);
+                    //UpdateMarkerData(marker, ref _lastPositionMarker2, ref _lastRotationMarker2);
                     _positionMarker2Valid = true;
                 }
             }
@@ -480,12 +521,12 @@ namespace ArUcoDetectionHoloLensUnity
         //     if (detectedMarker.Id == 1 && _positionMarker2Valid)
         //     {
         //         // objectGo.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
-        //         UpdateMarkerData(detectedMarker, out _lastPositionMarker1, out _lastRotationMarker1);
+        //         UpdateMarkerData(detectedMarker, ref _lastPositionMarker1, ref _lastRotationMarker1);
         //     }
         //     else if (detectedMarker.Id == 2 && _positionMarker1Valid)
         //     {
         //         // objectGo.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
-        //         UpdateMarkerData(detectedMarker, out _lastPositionMarker2, out _lastRotationMarker2);
+        //         UpdateMarkerData(detectedMarker, ref _lastPositionMarker2, ref _lastRotationMarker2);
         //     }
         // }
 
@@ -495,21 +536,21 @@ namespace ArUcoDetectionHoloLensUnity
 
             if (detectedMarker.Id == 1)
             {
-                //UpdateMarkerData(detectedMarker, out _lastPositionMarker1, out _lastRotationMarker1);
-                UpdateMarkerData(detectedMarker, markerGo1, out _lastPositionMarker1, out _lastRotationMarker1);
+                //UpdateMarkerData(detectedMarker, ref _lastPositionMarker1, ref _lastRotationMarker1);
+                UpdateMarkerData(detectedMarker, markerGo1, ref _lastPositionMarker1, ref _lastRotationMarker1);
                 _positionMarker1Valid = true;
             }
             else if (detectedMarker.Id == 2)
             {
-                //UpdateMarkerData(detectedMarker, out _lastPositionMarker2, out _lastRotationMarker2);
-                UpdateMarkerData(detectedMarker, markerGo2, out _lastPositionMarker2, out _lastRotationMarker2);
+                //UpdateMarkerData(detectedMarker, ref _lastPositionMarker2, ref _lastRotationMarker2);
+                UpdateMarkerData(detectedMarker, markerGo2, ref _lastPositionMarker2, ref _lastRotationMarker2);
                 _positionMarker2Valid = true;
             }
 
             Debug.Log($"One marker detected: ID = {detectedMarker.Id}");
         }
 
-        // void UpdateMarkerData(DetectedArUcoMarker marker, out Vector3 lastPosition, out Quaternion lastRotation)
+        // void UpdateMarkerData(DetectedArUcoMarker marker, ref Vector3 lastPosition, ref Quaternion lastRotation)
         // {
         //     Vector3 position = CvUtils.Vec3FromFloat3(marker.Position);
         //     position.y *= -1f;
@@ -522,7 +563,7 @@ namespace ArUcoDetectionHoloLensUnity
         //     lastRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
         // }
 
-        void UpdateMarkerData(DetectedArUcoMarker marker, GameObject markerObj, out Vector3 lastPosition, out Quaternion lastRotation)
+        void UpdateMarkerData(DetectedArUcoMarker marker, GameObject markerObj, ref Vector3 lastPosition, ref Quaternion lastRotation)
         {
             // Extract position and rotation in camera space
             Vector3 position = CvUtils.Vec3FromFloat3(marker.Position);
@@ -534,8 +575,10 @@ namespace ArUcoDetectionHoloLensUnity
             Matrix4x4 transformUnityCamera = CvUtils.TransformInUnitySpace(position, rotation);
 
             Matrix4x4 transformUnityWorld = cameraToWorldUnity * transformUnityCamera;
-            lastPosition = CvUtils.GetVectorFromMatrix(transformUnityWorld);
-            lastRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
+            Vector3 curPosition = CvUtils.GetVectorFromMatrix(transformUnityWorld);
+            Quaternion curRotation = CvUtils.GetQuatFromMatrix(transformUnityWorld);
+
+            LerpPositionRotation(ref lastPosition, curPosition, ref lastRotation, curRotation, VSmoothFactor, RSmoothFactor);
 
             markerObj.transform.SetPositionAndRotation(lastPosition, lastRotation);
 
@@ -543,6 +586,64 @@ namespace ArUcoDetectionHoloLensUnity
         }
 
 #endif
+
+        public void LerpPositionRotation(ref Vector3 lastPosition, Vector3 curPosition, ref Quaternion lastRotation, Quaternion curRotation, float VSmoothFactor, float RSmoothFactor)
+        {
+
+            if (curRotation.w < 0)
+            {
+                // Negate the quaternion to flip it to the positive hemisphere
+                curRotation = new Quaternion(-curRotation.x, -curRotation.y, -curRotation.z, -curRotation.w);
+            }
+
+            if (lastRotation.w < 0)
+            {
+                // Negate the quaternion to flip it to the positive hemisphere
+                lastRotation = new Quaternion(-lastRotation.x, -lastRotation.y, -lastRotation.z, -lastRotation.w);
+            }
+
+            if (lastPosition == Vector3.zero || lastRotation == Quaternion.identity) 
+            {
+                lastPosition = curPosition;
+                lastRotation = curRotation;
+                myText.text += "\nPosition Initialized!";
+            }
+            else 
+            {
+                lastPosition = Vector3.Lerp(lastPosition, curPosition, VSmoothFactor);
+                lastRotation = Quaternion.Slerp(lastRotation, curRotation, RSmoothFactor);
+            }
+        }
+
+        public static GameObject LerpTransforms(GameObject a, GameObject b, float RSmoothFactor, float VSmoothFactor, GameObject outputObj = null)
+        {
+            if (outputObj == null)
+            {
+                outputObj = new GameObject();
+            }
+            outputObj.transform.rotation = Quaternion.Slerp(a.transform.rotation, b.transform.rotation, RSmoothFactor);
+            outputObj.transform.position = Vector3.Lerp(a.transform.position, b.transform.position, VSmoothFactor);
+
+            Quaternion curRotation = Quaternion.Slerp(a.transform.rotation, b.transform.rotation, RSmoothFactor);
+            Vector3 curPosition = Vector3.Lerp(a.transform.position, b.transform.position, VSmoothFactor);
+
+            if (curRotation.w < 0)
+            {
+                // Negate the quaternion to flip it to the positive hemisphere
+                curRotation = new Quaternion(-curRotation.x, -curRotation.y, -curRotation.z, -curRotation.w);
+            }
+            return outputObj;
+        }
+
+        public void hideMyText()
+        {
+            myText.enabled = false;
+        }
+
+        public void showMyText()
+        {
+            myText.enabled = true;
+        }
 
         /// <summary>
         /// Stop the media frame source groups.
@@ -635,5 +736,8 @@ namespace ArUcoDetectionHoloLensUnity
         }
         #endregion
     }
+
 }
+
+
 
