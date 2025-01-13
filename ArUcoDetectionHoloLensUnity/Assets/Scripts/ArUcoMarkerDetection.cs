@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.IO;
 
 #if ENABLE_WINMD_SUPPORT
 using Windows.UI.Xaml;
@@ -88,14 +89,16 @@ namespace ArUcoDetectionHoloLensUnity
         public int skipFrames = 2;
 
         // Relative Position between two markers
-        public Vector3 relativePosition;
+        public Vector3 relativePosition = Vector3.zero;
 
         // Relative Rotation between two markers
-        public Quaternion relativeRotation;
+        public Quaternion relativeRotation = Quaternion.identity;
 
         private float scaling = 10f;
 
-        
+        string datatFilePath;
+
+
 
 #if ENABLE_WINMD_SUPPORT
         // Enable winmd support to include winmd files. Will not
@@ -145,49 +148,36 @@ namespace ArUcoDetectionHoloLensUnity
             //objectGo.transform.localScale /= scaling;
 
             // DEBUG PURPOSES
+            datatFilePath = UnityEngine.Application.persistentDataPath + "/" + "relativePose.txt";
+
+
+            //_lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
+            //_lastRotationMarker1 = Quaternion.Euler(new Vector3(1, 0, 0));
+
+            //markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
+
+            //_lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
+            //_lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
+
+            //markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
+
+
+            //Debug.Log(_lastPositionMarker1);
+            //Debug.Log(_lastRotationMarker1);
+
+            //Debug.Log(_lastPositionMarker2);
+            //Debug.Log(_lastRotationMarker2);
+
             //_positionMarker1Valid = true;
             //_positionMarker2Valid = true;
 
-            _lastPositionMarker1 = new Vector3(0.5f, 0.23f, 0.3f);
-            _lastRotationMarker1 = Quaternion.Euler(new Vector3(1, 0, 0));
+            //CaptureRelativePose();
 
-            markerGo1.transform.SetPositionAndRotation(_lastPositionMarker1, _lastRotationMarker1);
+            //Debug.Log(_lastPositionMarker1);
+            //Debug.Log(_lastRotationMarker1);
 
-            _lastPositionMarker2 = new Vector3(0.1f, 0, 0.51f);
-            _lastRotationMarker2 = Quaternion.Euler(new Vector3(30, 30, 30));
-
-            markerGo2.transform.SetPositionAndRotation(_lastPositionMarker2, _lastRotationMarker2);
-
-            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
-
-            Debug.Log(_lastPositionMarker1);
-            Debug.Log(_lastRotationMarker1);
-
-            Debug.Log(_lastPositionMarker2);
-            Debug.Log(_lastRotationMarker2);
-
-            _lastPositionMarker1 = Vector3.zero;
-            _lastRotationMarker1 = Quaternion.identity;
-
-            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
-
-            Debug.Log(_lastPositionMarker1);
-            Debug.Log(_lastRotationMarker1);
-
-            Debug.Log(_lastPositionMarker2);
-            Debug.Log(_lastRotationMarker2);
-
-
-            _lastPositionMarker2 = new Vector3(1f, 0, 1f);
-            _lastRotationMarker2 = Quaternion.Euler(new Vector3(10, 10, 10));
-
-            LerpPositionRotation(ref _lastPositionMarker1, _lastPositionMarker2, ref _lastRotationMarker1, _lastRotationMarker2, VSmoothFactor, RSmoothFactor);
-
-            Debug.Log(_lastPositionMarker1);
-            Debug.Log(_lastRotationMarker1);
-
-            Debug.Log(_lastPositionMarker2);
-            Debug.Log(_lastRotationMarker2);
+            //Debug.Log(_lastPositionMarker2);
+            //Debug.Log(_lastRotationMarker2);
 
 
             _lastPositionMarker1 = Vector3.zero;
@@ -195,6 +185,9 @@ namespace ArUcoDetectionHoloLensUnity
             _lastPositionMarker2 = Vector3.zero;
             _lastRotationMarker2 = Quaternion.identity;
 
+            
+            TryReadPoseFromFile(datatFilePath, out relativePosition, out relativeRotation);
+            PlaceBackObject();
         }
 
         /// <summary>
@@ -252,6 +245,75 @@ namespace ArUcoDetectionHoloLensUnity
         //    }
         //}
 
+        private void writePoseData()
+        {
+            StreamWriter writer = new System.IO.StreamWriter(datatFilePath, true);
+            string data = $"{relativePosition.x:F4},{relativePosition.y:F4},{relativePosition.z:F4}," +
+                      $"{relativeRotation.x:F4},{relativeRotation.y:F4},{relativeRotation.z:F4},{relativeRotation.w:F4}";
+            writer.WriteLine(data);
+            writer?.Dispose();
+        }
+
+        bool TryReadPoseFromFile(string path, out Vector3 position, out Quaternion rotation)
+        {
+            position = Vector3.zero;
+            rotation = Quaternion.identity;
+
+            // Check if the file exists
+            if (!File.Exists(path))
+            {
+                Debug.LogWarning($"File not found: {path}");
+                return false;
+            }
+
+            try
+            {
+                // Open the file using StreamReader
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    // Read the first line
+                    string line = reader.ReadLine();
+
+                    if (line == null)
+                    {
+                        Debug.LogWarning("File is empty.");
+                        return false;
+                    }
+
+                    // Split the line into components
+                    string[] parts = line.Split(',');
+
+                    if (parts.Length == 7)
+                    {
+                        // Parse position (x, y, z)
+                        float px = float.Parse(parts[0]);
+                        float py = float.Parse(parts[1]);
+                        float pz = float.Parse(parts[2]);
+                        position = new Vector3(px, py, pz);
+
+                        // Parse rotation (x, y, z, w)
+                        float rx = float.Parse(parts[3]);
+                        float ry = float.Parse(parts[4]);
+                        float rz = float.Parse(parts[5]);
+                        float rw = float.Parse(parts[6]);
+                        rotation = new Quaternion(rx, ry, rz, rw);
+
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Invalid data format in file.");
+                        return false;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Error reading file: {ex.Message}");
+                return false;
+            }
+        }
+
         public void CaptureRelativePose()
         {
             if (_positionMarker1Valid && _positionMarker2Valid)
@@ -264,6 +326,7 @@ namespace ArUcoDetectionHoloLensUnity
                 Debug.Log("Relative Position: " + relativePosition);
                 Debug.Log("Relative Rotation: " + relativeRotation);
 
+                writePoseData();
                 PlaceBackObject();
             }
             else
@@ -274,7 +337,7 @@ namespace ArUcoDetectionHoloLensUnity
 
         public void PlaceBackObject()
         {
-            if (_positionMarker1Valid)
+            if (markerGo1 != null)
             {
                 objectGo.transform.SetParent(markerGo1.transform);
                 objectGo.transform.localPosition = relativePosition;
@@ -287,6 +350,22 @@ namespace ArUcoDetectionHoloLensUnity
                 Debug.Log("No valid marker position available to place the object.");
             }
         }
+
+        //public void PlaceBackObject()
+        //{
+        //    if (_positionMarker1Valid)
+        //    {
+        //        objectGo.transform.SetParent(markerGo1.transform);
+        //        objectGo.transform.localPosition = relativePosition;
+        //        objectGo.transform.localRotation = relativeRotation;
+
+        //        Debug.Log("Placed the specimen object relative to resection bed marker");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("No valid marker position available to place the object.");
+        //    }
+        //}
 
 
 

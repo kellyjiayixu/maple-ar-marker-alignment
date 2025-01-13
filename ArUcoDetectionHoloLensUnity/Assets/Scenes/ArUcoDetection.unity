@@ -385,7 +385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 778513723}
   m_Layer: 0
-  m_Name: Specimen
+  m_Name: SpecimenHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -463,8 +463,8 @@ MonoBehaviour:
   markerGo1: {fileID: 1388421543}
   markerGo2: {fileID: 873700582}
   objectGo: {fileID: 778513722}
-  VSmoothFactor: 0.08
-  RSmoothFactor: 0.08
+  VSmoothFactor: 0.12
+  RSmoothFactor: 0.12
   skipFrames: 2
   relativePosition: {x: 0, y: 0, z: 0}
   relativeRotation: {x: 0, y: 0, z: 0, w: 0}

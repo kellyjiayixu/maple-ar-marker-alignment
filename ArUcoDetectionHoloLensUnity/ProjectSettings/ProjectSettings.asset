@@ -569,7 +569,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 8042d71a1464db01
+  metroCertificateNotAfter: 00c477b2cd83dc01
   metroApplicationDescription: ArUcoDetectionHoloLensUnity
   wsaImages: {}
   metroTileShortName: ArUcoDetectionHoloLensUnity
