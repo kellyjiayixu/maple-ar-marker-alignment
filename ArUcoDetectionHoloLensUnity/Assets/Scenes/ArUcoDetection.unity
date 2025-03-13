@@ -419,6 +419,7 @@ GameObject:
   - component: {fileID: 805832266}
   - component: {fileID: 805832267}
   - component: {fileID: 805832268}
+  - component: {fileID: 805832269}
   m_Layer: 0
   m_Name: Script Holder
   m_TagString: Untagged
@@ -594,6 +595,19 @@ MonoBehaviour:
   modelContainerObj: {fileID: 778513722}
   modelFileName: specimen.obj
   materialFileName: specimen.mtl
+--- !u!114 &805832269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805832262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cf21dfe13cc3043aa7dd91e7bd3608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specimen: {fileID: 0}
 --- !u!1 &834886952
 GameObject:
   m_ObjectHideFlags: 0
