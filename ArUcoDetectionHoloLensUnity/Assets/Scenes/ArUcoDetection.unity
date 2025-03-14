@@ -530,6 +530,11 @@ PrefabInstance:
       propertyPath: startDimensionIndex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 395021926574060230, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: constraintsManager
+      value: 
+      objectReference: {fileID: 1451941033}
     - target: {fileID: 428037903660722978, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_Mesh
@@ -614,6 +619,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.0172
+      objectReference: {fileID: 0}
+    - target: {fileID: 3748581907514577395, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4181861233357845160, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -1707,6 +1717,26 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!1 &1451941032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6746769050158529718, guid: e969038e4d67d9b498de2ef538969506,
+    type: 3}
+  m_PrefabInstance: {fileID: 780565317}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1451941033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451941032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98de877dee5fc341b4eb59dfdab266c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoConstraintSelection: 1
+  selectedConstraints: []
 --- !u!1 &1469056690 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8839117086356187597, guid: e969038e4d67d9b498de2ef538969506,
