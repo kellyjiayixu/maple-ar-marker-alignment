@@ -555,6 +555,16 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 428037904147495596, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1061387880118192949, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1104838564556229266, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_Mesh
@@ -575,10 +585,20 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1242475254642006523, guid: e969038e4d67d9b498de2ef538969506,
+    - target: {fileID: 1104838565042477852, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1216948242880507618, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1242475254642006523, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1305400959061624163, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -592,8 +612,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1765997328749114911, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
+      propertyPath: m_text
+      value: Next Specimen
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765997328749114911, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
       propertyPath: m_textAlignment
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765997328749114911, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 1765997328749114911, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -621,6 +651,11 @@ PrefabInstance:
       value: -0.0172
       objectReference: {fileID: 0}
     - target: {fileID: 3748581907514577395, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4181861232904626982, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -653,7 +688,7 @@ PrefabInstance:
     - target: {fileID: 4278132620418148114, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4278132620418148114, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -663,7 +698,7 @@ PrefabInstance:
     - target: {fileID: 4278132620418148114, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0066
+      value: -0.03
       objectReference: {fileID: 0}
     - target: {fileID: 5201862997053450832, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -720,6 +755,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6722744150799764869, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7020280403821975562, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -730,6 +770,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.0165
       objectReference: {fileID: 0}
+    - target: {fileID: 7112233544509658127, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7179211664527634146, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -739,6 +784,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.0868
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500222221961590207, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7636352527081481622, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7636352527568319512, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
@@ -760,6 +815,21 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7881284634386902116, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7883149401895181706, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.078
+      objectReference: {fileID: 0}
+    - target: {fileID: 7883149401895181706, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.055
+      objectReference: {fileID: 0}
     - target: {fileID: 8019603274979696413, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -770,6 +840,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.0591
       objectReference: {fileID: 0}
+    - target: {fileID: 8264282566011063766, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: iconQuadTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 559e1da0e65611c4f93ec931e1e6a8a2, type: 3}
     - target: {fileID: 8620029839302824369, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_textAlignment
@@ -790,10 +865,30 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8620029839789588545, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8839117086356187597, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_Name
       value: NearMenu3x2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9205671806015703372, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: VoiceCommand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9205671806015703372, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 805832269}
+    - target: {fileID: 9205671806015703372, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateCurSpecimenObject
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e969038e4d67d9b498de2ef538969506, type: 3}
@@ -1049,10 +1144,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c896cbd8a584ab84aa0b49b14d7ddd15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadedObjectNamesList: []
   myText: {fileID: 705192944}
   modelContainerObj: {fileID: 778513722}
-  modelFileName: specimen.obj
-  materialFileName: specimen.mtl
+  modelFilePrefix: specimen
 --- !u!114 &805832269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,6 +1160,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64cf21dfe13cc3043aa7dd91e7bd3608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modelFileLoader: {fileID: 805832268}
+  loadedObjectNamesList: []
+  curSpecimenIndx: 0
   specimen: {fileID: 0}
   transparencySlider: {fileID: 2046094555}
   meshMenu: {fileID: 0}

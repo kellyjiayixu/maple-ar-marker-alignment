@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.UI;
 
 public class meshController : MonoBehaviour
 {
     // Reference to your specimen object
+    public ModelFileLoader modelFileLoader;
+    public List<string> loadedObjectNamesList;
+    public int curSpecimenIndx = 0;
     public GameObject specimen;
     public PinchSlider transparencySlider;
     public GameObject meshMenu;
@@ -15,71 +19,128 @@ public class meshController : MonoBehaviour
 
     void Start()
     {
-        specimen = GameObject.Find("specimen");
+        specimen = null;
+        loadedObjectNamesList = modelFileLoader.loadedObjectNamesList;
+        alphaValue = 0.5f;
+        if (transparencySlider != null)
+        {
+            transparencySlider.SliderValue = alphaValue;
+        }
+
+    }
+
+
+    void Update()
+    {
+        if (loadedObjectNamesList.Count > 0 && specimen == null)
+        {
+            SetCurSpecimenObject(curSpecimenIndx);
+        }
+    }
+
+    public void UpdateCurSpecimenObject()
+    {
+        if (loadedObjectNamesList.Count == 0)
+        {
+            return;
+        }
+        curSpecimenIndx = (curSpecimenIndx + 1) % loadedObjectNamesList.Count;
+
+        SetCurSpecimenObject(curSpecimenIndx);
+    }
+
+    public void SetCurSpecimenObject(int curIdx)
+    {
+        curSpecimenIndx = curIdx;
+
+        if (curSpecimenIndx >= loadedObjectNamesList.Count)
+        {
+            return;
+        }
+        // Hide all Specimens
+        SetObjectsInvisible(loadedObjectNamesList);
+
+        // show the currently visible specimeh, by converting the hashset<String> loadedObjectNames to list
+        specimen = SetObjectVisibleByIndex(loadedObjectNamesList, curSpecimenIndx);
+        Debug.Log("Currently Setting " + curSpecimenIndx + " to visible");
+        Debug.Log(specimen);
+
         if (specimen != null)
         {
-            Debug.Log(specimen.name);
-            Debug.Log(specimen.transform.GetChild(0).name);
-            // Get the renderer component from the specimen
-            Renderer renderer = specimen.GetComponent<MeshRenderer>();
+            specimen = modelFileLoader.GetChildThatIsNotTarget(specimen);
+            Renderer renderer = specimen.GetComponent<Renderer>();
 
             // Get the material (note: using sharedMaterial would affect all objects using this material)
             // Using material creates an instance that only affects this object
             materialWithTransparency = renderer.material;
+            SetTransparencyBySlider();
+        }
+
+    }
+
+    public void SetObjectsInvisible(List<string> objectNames)
+    {
+        foreach (string name in objectNames)
+        {
+            GameObject obj = GameObject.Find(name);
+            if (obj != null)
+            {
+                Renderer rend = obj.GetComponent<Renderer>();
+                if (rend != null)
+                { // TODO: handle the cases where only sub-components have renderers.
+                    rend.enabled = false;
+                }
+                SetAllChildRenderersInvisible(obj);
+            }
+            else
+            {
+                Debug.LogWarning($"Object not found: {name}");
+            }
         }
     }
-    GameObject GetChildThatIsNotTarget(GameObject parentObject)
+
+    public GameObject SetObjectVisibleByIndex(List<string> objectNames, int index)
     {
-        // Make sure parent exists and has children
-        if (parentObject == null || parentObject.transform.childCount == 0)
+        if (index < 0 || index >= objectNames.Count)
         {
+            Debug.LogError("Index out of range.");
             return null;
         }
 
-        // Go through children (max 2 as per your description)
-        for (int i = 0; i < parentObject.transform.childCount; i++)
+        string targetName = objectNames[index];
+        GameObject obj = GameObject.Find(targetName);
+        if (obj != null)
         {
-            Transform child = parentObject.transform.GetChild(i);
-
-            // If this child is not named "target", return it
-            if (child.name.ToLower() != "target" && child.name.ToLower() != "sphere")
+            Renderer rend = obj.GetComponent<Renderer>();
+            if (rend != null)
             {
-                return child.gameObject;
+                rend.enabled = true;
             }
-        }
-
-        // If all children are named "target" or there are no children
-        return null;
-    }
-
-    void Update()
-    {
-        if (specimen == null)
-        {
-            specimen = GameObject.Find("specimen");
-            if (specimen != null)
-            {
-                Debug.Log(specimen.name);
-                specimen = GetChildThatIsNotTarget(specimen);
-                Debug.Log(specimen.name);
-
-                // Get the renderer component from the specimen
-                Renderer renderer = specimen.GetComponent<Renderer>();
-
-                // Get the material (note: using sharedMaterial would affect all objects using this material)
-                // Using material creates an instance that only affects this object
-                materialWithTransparency = renderer.material;
-                SetupTransparentMaterial();
-                //SetTransparency(0.5f);
-                if (transparencySlider != null)
-                {
-                    transparencySlider.SliderValue = 0.5f;
-                }
-            }
+            SetAllChildRenderersVisible(obj);
+            return obj;
         }
         else
         {
-            // SetTransparency(0.1f);
+            Debug.LogWarning($"Object not found: {targetName}");
+        }
+        return null;
+    }
+
+    public void SetAllChildRenderersInvisible(GameObject parent)
+    {
+        Renderer[] renderers = parent.GetComponentsInChildren<Renderer>(includeInactive: true);
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+    }
+
+    public void SetAllChildRenderersVisible(GameObject parent)
+    {
+        Renderer[] renderers = parent.GetComponentsInChildren<Renderer>(includeInactive: true);
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = true;
         }
     }
 
@@ -103,6 +164,7 @@ public class meshController : MonoBehaviour
         UpdateTransparency(dAlpha);
     }
 
+    // Call this method to update transparency + slider value
     public void UpdateTransparency(float dAlpha)
     {
         if (specimen == null)
@@ -121,7 +183,7 @@ public class meshController : MonoBehaviour
         }
     }
 
-    // Call this method to set transparency (0 = fully transparent, 1 = fully opaque)
+    // Call this method to set transparency, but not slider value (0 = fully transparent, 1 = fully opaque)
     public void SetTransparency(float newAlphaValue)
     {
         if (specimen == null)

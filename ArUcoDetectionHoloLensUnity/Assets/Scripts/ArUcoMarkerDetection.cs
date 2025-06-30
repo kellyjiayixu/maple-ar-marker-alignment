@@ -262,7 +262,7 @@ namespace ArUcoDetectionHoloLensUnity
             // Check if the file exists
             if (!File.Exists(path))
             {
-                Debug.LogWarning($"File not found: {path}");
+                Debug.Log($"File not found: {path}");
                 return false;
             }
 
